@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Шакырту | Приглашение</title>
+    <title>Шакырту | Wedding Invitation</title>
+    
+    <!-- Шрифты с поддержкой казахского алфавита -->
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Montserrat:wght@300;400&display=swap&subset=cyrillic-ext" rel="stylesheet">
     
     <style>
@@ -15,7 +17,6 @@
             color: white;
         }
 
-        /* Длина скролла (увеличили для плавности) */
         .scroll-wrapper { height: 1200vh; }
 
         .diorama-container {
@@ -34,6 +35,7 @@
             will-change: transform;
         }
 
+        /* Слои (убедись, что файлы 1.png - 5.png лежат в той же папке) */
         #layer-1 { background-image: url('1.png'); z-index: 1; }
         #layer-2 { background-image: url('2.png'); z-index: 2; }
         #layer-3 { background-image: url('3.png'); z-index: 3; }
@@ -106,7 +108,6 @@
         h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; margin: 0; color: #fdf5e6; }
         p { font-size: 1rem; margin-top: 12px; line-height: 1.5; color: #eee; }
 
-        /* Стиль для кнопки 2ГИС */
         .map-btn {
             display: inline-block;
             margin-top: 20px;
@@ -116,7 +117,7 @@
             text-decoration: none;
             border-radius: 12px;
             font-weight: bold;
-            pointer-events: auto; /* Чтобы кнопка нажималась */
+            pointer-events: auto;
             transition: transform 0.2s;
         }
         .map-btn:active { transform: scale(0.95); }
@@ -124,7 +125,7 @@
 </head>
 <body>
 
-    <audio id="bg-music" loop>
+    <audio id="bg-music" loop preload="auto">
         <source src="music.mp3" type="audio/mpeg">
     </audio>
 
@@ -178,64 +179,46 @@
             </div>
         </div>
     </div>
-
     <script>
         const music = document.getElementById('bg-music');
         const musicBtn = document.getElementById('music-control');
         const layers = [
-            document.getElementById('layer-1'), document.getElementById('layer-2'),
-            document.getElementById('layer-3'), document.getElementById('layer-4'),
+            document.getElementById('layer-1'), 
+            document.getElementById('layer-2'),
+            document.getElementById('layer-3'), 
+            document.getElementById('layer-4'),
             document.getElementById('layer-5')
         ];
         const textLayers = document.querySelectorAll('.text-layer');
 
-        // ТВОИ КОЭФФИЦИЕНТЫ
+        // ТВОИ КОЭФФИЦИЕНТЫ И ГРОМКОСТЬ
         const layerSpeeds = [0.1, 0.4, 0.2, 0.3, 0.6]; 
-        music.volume = 0.1; // ГРОМКОСТЬ ТУТ
+        music.volume = 0.2; 
 
-       // --- ОБНОВЛЕННЫЙ БЛОК ЗАПУСКА МУЗЫКИ ---
-const music = document.getElementById('bg-music');
-const musicBtn = document.getElementById('music-control');
-let audioStarted = false;
+        let audioStarted = false;
 
-// Устанавливаем громкость
-music.volume = 0.4; 
-
-function startAudio() {
-    if (!audioStarted) {
-        music.play().then(() => {
-            musicBtn.textContent = '||';
-            audioStarted = true;
-        }).catch(e => {
-            console.log("Автовоспроизведение заблокировано браузером");
-        });
-    }
-}
-
-// 1. Пытаемся запустить при любом клике по экрану
-document.body.addEventListener('click', startAudio, { once: true });
-
-// 2. Пытаемся запустить при первом касании (для мобильных)
-document.body.addEventListener('touchstart', startAudio, { once: true });
-
-// 3. Пытаемся запустить при скролле (как запасной вариант)
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 5) startAudio();
-    
-    // ... здесь остается твой старый код анимации слоев и текста ...
-    const scrollPercent = window.scrollY / (document.body.offsetHeight - window.innerHeight);
-    // (весь остальной код параллакса)
-});
+        function startAudio() {
+            if (!audioStarted) {
+                music.play().then(() => {
+                    musicBtn.textContent = '||';
+                    audioStarted = true;
+                }).catch(() => {
+                    console.log("Ждем взаимодействия пользователя");
+                });
             }
         }
+
+        // Попытка запуска при первом касании или клике (для мобильных)
+        document.body.addEventListener('touchstart', startAudio, { once: true });
+        document.body.addEventListener('click', startAudio, { once: true });
 
         window.addEventListener('scroll', () => {
             const scrollPercent = window.scrollY / (document.body.offsetHeight - window.innerHeight);
             
-            // Включаем музыку при первом движении
+            // Запуск звука при начале скролла
             if (window.scrollY > 10) startAudio();
 
-            // Анимация диорамы
+            // Анимация слоев
             layers.forEach((layer, index) => {
                 if (layer) {
                     const speed = layerSpeeds[index];
@@ -245,14 +228,22 @@ window.addEventListener('scroll', () => {
                 }
             });
 
-            // Переключение текста
+            // Текст
             const activeIndex = Math.min(Math.floor(scrollPercent * textLayers.length), textLayers.length - 1);
             textLayers.forEach((text, i) => text.classList.toggle('active', i === activeIndex));
         });
 
-        musicBtn.addEventListener('click', () => {
-            if (music.paused) { music.play(); musicBtn.textContent = '||'; audioStarted = true; } 
-            else { music.pause(); musicBtn.textContent = '♪'; }
+        // Кнопка Play/Pause
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Чтобы не срабатывал touchstart на body
+            if (music.paused) {
+                music.play();
+                musicBtn.textContent = '||';
+                audioStarted = true;
+            } else {
+                music.pause();
+                musicBtn.textContent = '♪';
+            }
         });
 
         // Лепестки
