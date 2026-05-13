@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шакырту | Приглашение</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Montserrat:wght@300;400&display=swap&subset=cyrillic-ext" rel="stylesheet">
+    
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            background-color: #000;
+            overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
+            color: white;
+        }
+
+        /* Длина скролла (увеличили для плавности) */
+        .scroll-wrapper { height: 1200vh; }
+
+        .diorama-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            z-index: 0; overflow: hidden;
+        }
+
+        .layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background-size: cover;
+            background-position: center;
+            will-change: transform;
+        }
+
+        #layer-1 { background-image: url('1.png'); z-index: 1; }
+        #layer-2 { background-image: url('2.png'); z-index: 2; }
+        #layer-3 { background-image: url('3.png'); z-index: 3; }
+        #layer-4 { background-image: url('4.png'); z-index: 4; }
+        #layer-5 { background-image: url('5.png'); z-index: 5; }
+
+        #petal-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            z-index: 15; pointer-events: none;
+        }
+
+        .petal {
+            position: absolute;
+            border-radius: 150% 0 150% 0;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Кнопка музыки */
+        #music-control {
+            position: fixed;
+            bottom: 25px; right: 25px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 50px; height: 50px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 20px;
+            pointer-events: auto;
+        }
+
+        .fixed-scene {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10; pointer-events: none;
+        }
+
+        .text-layer {
+            position: absolute;
+            text-align: center;
+            width: 80%;
+            max-width: 380px;
+            padding: 40px 20px;
+            opacity: 0;
+            transform: scale(0.85);
+            transition: opacity 0.7s ease, transform 0.9s ease;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .text-layer.active { opacity: 1; transform: scale(1); }
+
+        h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; margin: 0; color: #fdf5e6; }
+        p { font-size: 1rem; margin-top: 12px; line-height: 1.5; color: #eee; }
+
+        /* Стиль для кнопки 2ГИС */
+        .map-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: #d4af37;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            pointer-events: auto; /* Чтобы кнопка нажималась */
+            transition: transform 0.2s;
+        }
+        .map-btn:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <button id="music-control">♪</button>
+
+    <div id="petal-container"></div>
+
+    <div class="diorama-container">
+        <div class="layer" id="layer-1"></div>
+        <div class="layer" id="layer-2"></div>
+        <div class="layer" id="layer-3"></div>
+        <div class="layer" id="layer-4"></div>
+        <div class="layer" id="layer-5"></div>
+    </div>
+
+    <div class="scroll-wrapper">
+        <div class="fixed-scene">
+            <!-- ЭКРАН 1 -->
+            <div class="text-layer active">
+                <h1>Құрметті қонақтар!</h1>
+                <p>Сіздерді ұлымыз <br>Жанбейбарс пен келініміз Бахытжамалдың<br>үйлену тойына арналған ақ дастарханымыздың<br>қадірлі қонағы болуына 		шақырамыз!</p>
+            </div>
+            
+            <!-- ЭКРАН 2 -->
+            <div class="text-layer">
+                <h1>Той салатанаты</h1>
+                <p>27 маусым 2026 жыл<br>Сағат 18:00-де басталады</p>
+            </div>
+
+            <!-- ЭКРАН 3 -->
+            <div class="text-layer">
+                <h1>Мекен-жайы</h1>
+		<p>Шымкент қаласы, Біркөлік шатқалы</p>
+                <p>"BASTAU" демалыс аймағы</p>
+                <!-- СЮДА МОЖНО ВСТАВИТЬ КАРТУ, НО КНОПКА НАДЕЖНЕЕ -->
+                <a href="https://2gis.kz/shymkent/geo/70000001087713674/70.003253,42.092633" target="_blank" class="map-btn">
+                    2ГИС-те ашу
+                </a>
+            </div>
+
+            <!-- ЭКРАН 4 -->
+            <div class="text-layer">
+                <h1>Той иелері</h1>
+                <p>Елтай - Лейла</p>
+            </div>
+
+            <!-- ЭКРАН 5 -->
+            <div class="text-layer">
+                <h1>Сіздерді күтеміз!</h1>
+                <p>Қуанышымызға ортақ болыңыздар!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const music = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-control');
+        const layers = [
+            document.getElementById('layer-1'), document.getElementById('layer-2'),
+            document.getElementById('layer-3'), document.getElementById('layer-4'),
+            document.getElementById('layer-5')
+        ];
+        const textLayers = document.querySelectorAll('.text-layer');
+
+        // ТВОИ КОЭФФИЦИЕНТЫ
+        const layerSpeeds = [0.1, 0.4, 0.2, 0.3, 0.6]; 
+        music.volume = 0.1; // ГРОМКОСТЬ ТУТ
+
+        let audioStarted = false;
+        function startAudio() {
+            if (!audioStarted) {
+                music.play().catch(() => console.log("Ждем взаимодействия"));
+                musicBtn.textContent = '||';
+                audioStarted = true;
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrollPercent = window.scrollY / (document.body.offsetHeight - window.innerHeight);
+            
+            // Включаем музыку при первом движении
+            if (window.scrollY > 10) startAudio();
+
+            // Анимация диорамы
+            layers.forEach((layer, index) => {
+                if (layer) {
+                    const speed = layerSpeeds[index];
+                    const scaleValue = 1 + (scrollPercent * speed);
+                    const yOffset = scrollPercent * (index * 8); 
+                    layer.style.transform = `scale(${scaleValue}) translateY(${yOffset}px)`;
+                }
+            });
+
+            // Переключение текста
+            const activeIndex = Math.min(Math.floor(scrollPercent * textLayers.length), textLayers.length - 1);
+            textLayers.forEach((text, i) => text.classList.toggle('active', i === activeIndex));
+        });
+
+        musicBtn.addEventListener('click', () => {
+            if (music.paused) { music.play(); musicBtn.textContent = '||'; audioStarted = true; } 
+            else { music.pause(); musicBtn.textContent = '♪'; }
+        });
+
+        // Лепестки
+        const petalContainer = document.getElementById('petal-container');
+        const colors = ['#e63946', '#ffb703', '#b185db']; 
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const size = Math.random() * 10 + 6 + 'px';
+            petal.style.width = size; petal.style.height = size;
+            petal.style.backgroundColor = color;
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = Math.random() * 5 + 7 + 's';
+            petalContainer.appendChild(petal);
+            setTimeout(() => petal.remove(), 10000);
+        }
+        setInterval(createPetal, 400);
+    </script>
+</body>
+</html>
