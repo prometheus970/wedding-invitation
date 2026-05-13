@@ -193,12 +193,39 @@
         const layerSpeeds = [0.1, 0.4, 0.2, 0.3, 0.6]; 
         music.volume = 0.1; // ГРОМКОСТЬ ТУТ
 
-        let audioStarted = false;
-        function startAudio() {
-            if (!audioStarted) {
-                music.play().catch(() => console.log("Ждем взаимодействия"));
-                musicBtn.textContent = '||';
-                audioStarted = true;
+       // --- ОБНОВЛЕННЫЙ БЛОК ЗАПУСКА МУЗЫКИ ---
+const music = document.getElementById('bg-music');
+const musicBtn = document.getElementById('music-control');
+let audioStarted = false;
+
+// Устанавливаем громкость
+music.volume = 0.4; 
+
+function startAudio() {
+    if (!audioStarted) {
+        music.play().then(() => {
+            musicBtn.textContent = '||';
+            audioStarted = true;
+        }).catch(e => {
+            console.log("Автовоспроизведение заблокировано браузером");
+        });
+    }
+}
+
+// 1. Пытаемся запустить при любом клике по экрану
+document.body.addEventListener('click', startAudio, { once: true });
+
+// 2. Пытаемся запустить при первом касании (для мобильных)
+document.body.addEventListener('touchstart', startAudio, { once: true });
+
+// 3. Пытаемся запустить при скролле (как запасной вариант)
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 5) startAudio();
+    
+    // ... здесь остается твой старый код анимации слоев и текста ...
+    const scrollPercent = window.scrollY / (document.body.offsetHeight - window.innerHeight);
+    // (весь остальной код параллакса)
+});
             }
         }
 
